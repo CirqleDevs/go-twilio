@@ -105,6 +105,7 @@ type ProxyOutOfSessionCallbackWebhook struct {
 	Body          string `form:"Body"`
 	SmsSid        string `form:"SmsSid"`
 	MessageSid    string `form:"MessageSid"`
+	MessageStatus string `form:"MessageStatus"`
 	NumMedia      string `form:"NumMedia"`
 	NumSegments   string `form:"NumSegments"`
 	SmsStatus     string `form:"SmsStatus"`
