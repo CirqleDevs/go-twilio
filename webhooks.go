@@ -2,11 +2,46 @@ package gotwilio
 
 import (
 	"encoding/json"
+	"errors"
 	"net/url"
 	"time"
 
 	"github.com/gorilla/schema"
 )
+
+// SmsStatus represents the status of the message sent to the twilio callback webhook
+type SmsStatus string
+
+const (
+	SmsStatusQueued      = SmsStatus("queued")
+	SmsStatusFailed      = SmsStatus("failed")
+	SmsStatusSent        = SmsStatus("sent")
+	SmsStatusDelivered   = SmsStatus("delivered")
+	SmsStatusUndelivered = SmsStatus("undelivered")
+)
+
+func (s SmsStatus) String() string {
+	return string(s)
+}
+
+func ParseSmsStatus(input string) (SmsStatus, error) {
+	var q, f, s, d, u = SmsStatusQueued.String(), SmsStatusFailed.String(), SmsStatusSent.String(),
+		SmsStatusDelivered.String(), SmsStatusUndelivered.String()
+	switch input {
+	case q:
+		return SmsStatusQueued, nil
+	case f:
+		return SmsStatusFailed, nil
+	case s:
+		return SmsStatusSent, nil
+	case d:
+		return SmsStatusDelivered, nil
+	case u:
+		return SmsStatusUndelivered, nil
+	default:
+		return SmsStatus("unknown:error"), errors.New("invalid sms status")
+	}
+}
 
 var formDecoder *schema.Decoder
 
@@ -105,7 +140,7 @@ type ProxyOutOfSessionCallbackWebhook struct {
 	Body          string `form:"Body"`
 	SmsSid        string `form:"SmsSid"`
 	MessageSid    string `form:"MessageSid"`
-	MessageStatus string `form:"MessageStatus"`
+	MessageStatus string `form:"MessageStatus"` // added by me
 	NumMedia      string `form:"NumMedia"`
 	NumSegments   string `form:"NumSegments"`
 	SmsStatus     string `form:"SmsStatus"`
@@ -162,6 +197,9 @@ type ProxyOutOfSessionCallbackWebhook struct {
 	Direction  string `form:"Direction"`
 	AddOns     string `form:"AddOns"`
 	APIVersion string `form:"ApiVersion"`
+
+	// generic callback params. added by me
+	ErrorCode string `form:"ErrorCode"`
 }
 
 // https://www.twilio.com/docs/sms/twiml#request-parameters
