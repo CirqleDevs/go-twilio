@@ -23,13 +23,37 @@ const (
 // the word equivalents of each sms status
 var smsStatusIota = [5]string{"queued", "failed", "sent", "delivered", "undelivered"}
 
+// VoiceStatus represents the possible values returned from the twilio callback webhook
+type VoiceStatus int
+
+// queued, ringing, in-progress, completed, busy, failed or no-answer
+const (
+	VoiceStatusQueued VoiceStatus = iota
+	VoiceStatusRinging
+	VoiceStatusInProgress
+	VoiceStatusCompleted
+	VoiceStatusBusy
+	VoiceStatusFailed
+	VoiceStatusNoAnswer
+)
+
+var voiceStatusIota = [7]string{"queued", "ringing", "in-progress", "completed", "busy", "failed", "no-answer"}
+
 func (s SmsStatus) String() string {
 	return smsStatusIota[s]
 }
 
+func (v VoiceStatus) String() string {
+	return voiceStatusIota[v]
+}
+
+// ParseSmsStatus checks the validity of the Sms Status value
 func ParseSmsStatus(input string) (SmsStatus, error) {
+	// get string values of sms status to compare against input
 	var q, f, s, d, u = SmsStatusQueued.String(), SmsStatusFailed.String(), SmsStatusSent.String(),
 		SmsStatusDelivered.String(), SmsStatusUndelivered.String()
+
+	// compare against input
 	switch input {
 	case q:
 		return SmsStatusQueued, nil
@@ -44,6 +68,33 @@ func ParseSmsStatus(input string) (SmsStatus, error) {
 	default:
 		// arbitrarily return failed status, with an error
 		return SmsStatusFailed, errors.New("invalid sms status")
+	}
+}
+
+// ParseSmsStatus checks the validity of the Voice Call Status value
+func ParseVoiceStatus(in string) (VoiceStatus, error) {
+	// get string values of voice status to compare against input
+	var q, r, i, c, b, f, n = VoiceStatusQueued.String(), VoiceStatusRinging.String(), VoiceStatusInProgress.String(),
+		VoiceStatusCompleted.String(), VoiceStatusBusy.String(), VoiceStatusFailed.String(), VoiceStatusNoAnswer.String()
+
+	// compare against input
+	switch in {
+	case q:
+		return VoiceStatusQueued, nil
+	case r:
+		return VoiceStatusRinging, nil
+	case i:
+		return VoiceStatusInProgress, nil
+	case c:
+		return VoiceStatusCompleted, nil
+	case b:
+		return VoiceStatusBusy, nil
+	case f:
+		return VoiceStatusFailed, nil
+	case n:
+		return VoiceStatusNoAnswer, nil
+	default:
+		return VoiceStatusFailed, errors.New("invalid voice status")
 	}
 }
 
