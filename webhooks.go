@@ -10,18 +10,21 @@ import (
 )
 
 // SmsStatus represents the status of the message sent to the twilio callback webhook
-type SmsStatus string
+type SmsStatus int
 
 const (
-	SmsStatusQueued      = SmsStatus("queued")
-	SmsStatusFailed      = SmsStatus("failed")
-	SmsStatusSent        = SmsStatus("sent")
-	SmsStatusDelivered   = SmsStatus("delivered")
-	SmsStatusUndelivered = SmsStatus("undelivered")
+	SmsStatusQueued SmsStatus = iota
+	SmsStatusFailed
+	SmsStatusSent
+	SmsStatusDelivered
+	SmsStatusUndelivered
 )
 
+// the word equivalents of each sms status
+var smsStatusIota = [5]string{"queued", "failed", "sent", "delivered", "undelivered"}
+
 func (s SmsStatus) String() string {
-	return string(s)
+	return smsStatusIota[s]
 }
 
 func ParseSmsStatus(input string) (SmsStatus, error) {
@@ -39,7 +42,8 @@ func ParseSmsStatus(input string) (SmsStatus, error) {
 	case u:
 		return SmsStatusUndelivered, nil
 	default:
-		return SmsStatus("unknown:error"), errors.New("invalid sms status")
+		// arbitrarily return failed status, with an error
+		return SmsStatusFailed, errors.New("invalid sms status")
 	}
 }
 
