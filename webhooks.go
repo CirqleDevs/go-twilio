@@ -201,7 +201,7 @@ type ProxyOutOfSessionCallbackWebhook struct {
 	// Data sent from the <Gather> TwilioML tag
 	Digits        string `form:"Digits"`
 	FinishedOnKey string `form:"FinishedOnKey"`
-	Msg           string `form:"Msg"`
+	Msg           string `form:"msg"`
 
 	// generic callback params. added by me
 	ErrorCode string `form:"ErrorCode"`
