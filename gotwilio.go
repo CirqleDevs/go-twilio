@@ -23,6 +23,12 @@ var defaultClient = &http.Client{
 	Timeout: time.Second * 30,
 }
 
+type Twilioer interface {
+	WithAPIKey(string, string) *Twilio
+	SendSMS(string, string, string, string, string) (*SmsResponse, *Exception, error)
+	CallWithUrlCallbacks(string, string, *CallbackParameters) (*VoiceResponse, *Exception, error)
+}
+
 // Twilio stores basic information important for connecting to the
 // twilio.com REST api such as AccountSid and AuthToken.
 type Twilio struct {
