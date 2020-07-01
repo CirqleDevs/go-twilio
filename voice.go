@@ -121,6 +121,16 @@ func (twilio *Twilio) GetCall(sid string) (*VoiceResponse, *Exception, error) {
 	return voiceResponse, nil, err
 }
 
+// call with provided voice instructions (twiml)
+func (twilio *Twilio) Call(from, to, twiml string) (*VoiceResponse, *Exception, error) {
+	formValues := url.Values{}
+	formValues.Set("From", from)
+	formValues.Set("To", to)
+	formValues.Set("Twiml", twiml)
+
+	return twilio.voicePost("Calls.json", formValues)
+}
+
 // Place a voice call with a list of callbacks specified.
 func (twilio *Twilio) CallWithUrlCallbacks(from, to string, callbackParameters *CallbackParameters) (*VoiceResponse, *Exception, error) {
 	formValues := url.Values{}

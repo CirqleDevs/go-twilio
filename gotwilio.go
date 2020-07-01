@@ -26,6 +26,7 @@ var defaultClient = &http.Client{
 type Twilioer interface {
 	WithAPIKey(string, string) *Twilio
 	SendSMS(string, string, string, string, string) (*SmsResponse, *Exception, error)
+	Call(string, string, string) (*VoiceResponse, *Exception, error)
 	CallWithUrlCallbacks(string, string, *CallbackParameters) (*VoiceResponse, *Exception, error)
 }
 
